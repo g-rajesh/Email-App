@@ -1,6 +1,6 @@
 import react, { useState } from "react";
 
-import { MdEmail } from "react-icons/md";
+import "./Signup.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
 
@@ -8,13 +8,19 @@ const Signup = () => {
   return (
     <div className="signup">
       <div className="left">
-        <h2 className="title">Sign up</h2>
-        <form className="form">
-          <InputField label="Name" properties={{ id: "name", type: "text" }} />
-          <Button>Submit</Button>
-        </form>
+        <div className="container">
+            <h2 className="title">Sign up</h2>
+            <form className="form">
+            <InputField label="First Name" properties={{ id: "firstName", type: "text" }} />
+            <InputField label="Last Name" properties={{ id: "lastName", type: "text" }} />
+            <InputField label="Email" properties={{ id: "email", type: "email" }} />
+            <InputField label="Password" properties={{ id: "password", type: "password" }} />
+            <Button>Submit</Button>
+            </form>
+        </div>
       </div>
-      <div className="right"></div>
+      <div className="right">
+      </div>
     </div>
   );
 };

@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 const InputField = (props) => {
   console.log(props);
   return (
-    <Fragment>
+    <div className="field-group">
       <label htmlFor={props.id}>{props.label}</label>
       <input className={`input ${props.className}`} {...props.properties} />
-    </Fragment>
+    </div>
   );
 };
 
