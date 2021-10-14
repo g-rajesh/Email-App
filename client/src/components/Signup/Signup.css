@@ -136,7 +136,7 @@
   left: 5%;
   height: 140px;
   width: 140px;
-  background: rgb(231, 162, 32);
+  background: rgb(252, 181, 50);
   transform: skewY(17deg);
 }
 .right #two {
@@ -145,7 +145,7 @@
   left: 25%;
   height: 60px;
   width: 60px;
-  background: rgb(255, 217, 0);
+  background: rgb(247, 192, 42);
   transform: skewY(17deg);
 }
 
