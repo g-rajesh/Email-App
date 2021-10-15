@@ -1,4 +1,5 @@
-import react, { useState } from "react";
+import { useState } from "react";
+import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import "./Signup.css";
@@ -17,17 +18,25 @@ const Signup = () => {
     setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(formDetails);
-  };
+  // const submitHandler = (e) => {
+  //   e.preventDefault();
+  //   console.log(formDetails);
+  // };
 
   return (
     <div className="signup">
       <div className="left">
+        <Link to="/" className="logo">
+          <MdEmail />
+          <span>Mailer</span>
+        </Link>
         <div className="container">
           <h2 className="title">Sign up</h2>
-          <form className="form" onSubmit={submitHandler}>
+          <form
+            className="form"
+            method="POST"
+            action="http://localhost:3001/add/user"
+          >
             <div className="name-group">
               <InputField
                 label="First Name"

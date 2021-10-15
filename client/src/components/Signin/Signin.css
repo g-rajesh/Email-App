@@ -1,26 +1,27 @@
-.signup {
+.signin {
   width: 100%;
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.signup .left {
+.signin .right {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.signup .left .title {
+.signin .right .title {
   font-size: 1.6rem;
   margin-bottom: 2rem;
 }
 
-.signup .left .logo {
+.signin .right .logo {
   text-decoration: none;
   position: absolute;
   top: 5%;
-  left: 13%;
+  left: 25.75%;
   font-size: 1.8rem;
   color: #0057fb;
   display: flex;
@@ -28,31 +29,31 @@
   align-items: center;
 }
 
-.signup .left .logo span {
+.signin .right .logo span {
   margin-left: 0.75rem;
   color: #333;
 }
 
-.signup .form {
+.signin .form {
   width: 370px;
   margin-bottom: 1rem;
 }
 
-.left .form .name-group {
+.right .form .name-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 0.7rem;
 }
-.left .form .name-group .field-group {
+.right .form .name-group .field-group {
   margin: 0;
 }
 
-.left .field-group {
+.right .field-group {
   margin: 1rem 0;
   position: relative;
 }
 
-.left .field-group label {
+.right .field-group label {
   position: absolute;
   top: 50%;
   left: 0.8rem;
@@ -73,7 +74,7 @@
   background-color: #fff;
 }
 
-.left .field-group .eyeIcon {
+.right .field-group .eyeIcon {
   position: absolute;
   top: 50%;
   right: 0.8rem;
@@ -83,7 +84,7 @@
   color: #333;
 }
 
-.left .field-group input {
+.right .field-group input {
   padding: 0.5rem 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -114,17 +115,17 @@
   background-color: hsl(219, 100%, 42%);
 }
 
-.left p a {
+.right p a {
   text-decoration: none;
 }
 
-.left .redirect-link {
+.right .redirect-link {
   color: #0057fb;
   text-decoration: none;
   border-bottom: 1px solid #0057fb;
 }
 
-.signup .right {
+.signin .left {
   background-color: #0057fb;
   color: #fff;
   display: flex;
@@ -134,95 +135,107 @@
   overflow: hidden;
 }
 
-.right .container {
+.left .container {
   width: 370px;
 }
 
-.right .container h1 {
+.left .container h1 {
   margin-bottom: 1.2rem;
 }
 
-.right .container p {
+.left .container p {
   font-size: 0.9rem;
   line-height: 25px;
 }
 
-.right #one {
+.left #one {
   position: absolute;
   top: 5%;
-  left: 5%;
+  right: 3%;
   height: 140px;
   width: 140px;
   background: rgb(252, 181, 50);
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
-.right #two {
+.left #two {
   position: absolute;
   top: 5%;
-  left: 25%;
+  right: 23%;
   height: 60px;
   width: 60px;
   background: rgb(247, 192, 42);
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
 
-.right #three {
+.left #three {
   position: absolute;
   bottom: -5%;
-  right: 20%;
+  left: 15%;
   height: 170px;
   width: 170px;
   background: #1d3557a6;
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
-.right #four {
+.left #four {
   position: absolute;
   bottom: 17%;
-  right: 17%;
+  left: 12%;
   height: 60px;
   width: 60px;
   background: #1d3557a6;
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
-.right #five {
+.left #five {
   position: absolute;
   bottom: 2%;
-  right: 7%;
+  left: 3%;
   height: 75px;
   width: 75px;
   background: #1d3557a6;
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
 
-.right #five {
+/* .left #six {
   position: absolute;
-  bottom: 2%;
-  right: 7%;
-  height: 75px;
-  width: 75px;
-  background: #1d3557a6;
-  transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
+  bottom: 4%;
+  right: 3%;
+  height: 100px;
+  width: 100px;
+  background: #ffffff77;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
 }
-@keyframes animateright {
+
+.left #seven {
+  position: absolute;
+  bottom: 8%;
+  right: 18%;
+  height: 50px;
+  width: 50px;
+  background: #ffffff77;
+  transform: skewY(-17deg);
+  animation: animateleft 0.75s ease-in-out forwards;
+} */
+
+@keyframes animateleft {
   0% {
-    transform: translateX(100px) skewY(17deg);
+    transform: translateX(-100px) skewY(-17deg);
   }
   25% {
-    transform: translateX(75px) skewY(17deg);
+    transform: translateX(-75px) skewY(-17deg);
   }
   50% {
-    transform: translateX(50px) skewY(17deg);
+    transform: translateX(-50px) skewY(-17deg);
   }
   75% {
-    transform: translateX(25px) skewY(17deg);
+    transform: translateX(-25px) skewY(-17deg);
   }
   100% {
-    transform: translateX(0) skewY(17deg);
+    transform: translateX(0) skewY(-17deg);
   }
 }
