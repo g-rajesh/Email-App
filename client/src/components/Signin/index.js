@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import "./Signin.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
+import {getUserDetails} from '../../Util/functions';
 
 const Signin = () => {
   const [formDetails, setFormDetails] = useState({
@@ -12,14 +13,21 @@ const Signin = () => {
     password: "",
   });
 
+  useEffect(()=>{
+    const details = getUserDetails();
+    console.log(details, details.password);
+    if(details){
+      setFormDetails({...formDetails, email: details.email, password: details.password});
+    }
+  },[])
   const changeHandler = (e) => {
     setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
   };
 
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
-  //   console.log(formDetails);
-  // };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(formDetails);
+  };
 
   return (
     <div className="signin">
@@ -51,17 +59,18 @@ const Signin = () => {
           <h2 className="title">Sign in</h2>
           <form
             className="form"
-            method="POST"
-            action="http://localhost:3001/authenticate/user"
+            onSubmit={submitHandler}
           >
             <InputField
               label="Email"
+              auto_focus
               properties={{
                 id: "email",
                 type: "email",
                 name: "email",
                 value: formDetails.email,
                 onChange: changeHandler,
+                className: formDetails.email ? "valid":"",
               }}
             />
             <InputField
@@ -72,8 +81,15 @@ const Signin = () => {
                 name: "password",
                 value: formDetails.password,
                 onChange: changeHandler,
+                className: formDetails.password ? "valid":"",
               }}
             />
+            <div className="remember"> 
+              {
+                  formDetails.email && formDetails.password ? <input type="checkbox" name="remember" id="remember" /> : <input type="checkbox" name="remember" id="remember" disabled />
+              }
+              <label htmlFor="remember">Remember me</label>
+            </div>
             <Button>Sign in</Button>
           </form>
           <p>

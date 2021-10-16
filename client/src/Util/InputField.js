@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const InputField = (props) => {
   const [eye, setEye] = useState(false);
-
+  const inputRef = useRef();
+  
   if (props.label === "Password") {
     props.properties.type = "password";
   }
@@ -11,13 +12,18 @@ const InputField = (props) => {
     props.properties.type = "text";
   }
 
+  useEffect(() => {
+    if(props.auto_focus){
+      inputRef.current.focus();
+    }
+  }, []);
   return (
     <div className="field-group">
       <input
-        className={`input ${props.className}`}
+        ref={inputRef}
+        className={props.properties.className ? `input ${props.properties.className}` : "input"}
         {...props.properties}
         autoComplete="off"
-        required
       />
       <label htmlFor={props.id}>{props.label}</label>
       {props.label === "Password" ? (

@@ -53,7 +53,8 @@
   position: relative;
 }
 
-.right .field-group label {
+.right .field-group label,
+.right .field-group input:not(.valid) ~ label {
   position: absolute;
   top: 50%;
   left: 0.8rem;
@@ -65,7 +66,7 @@
 }
 
 .field-group input:focus ~ label,
-.field-group input:valid ~ label {
+.field-group input.valid ~ label {
   top: 0;
   left: 0.45rem;
   font-size: 0.7rem;
@@ -95,7 +96,20 @@
   height: 100%;
   z-index: 1;
 }
+.form .remember{
+  width: 100%;
+  margin: 1rem 0;
+  display:flex;
+  align-items:center;
+}
 
+.form .remember *:first-child{
+  margin-right: 0.5rem;
+}
+.form .remember label{
+  font-size: 0.8rem;
+  color: #666;
+}
 .form .btn {
   display: inline-block;
   outline: none;

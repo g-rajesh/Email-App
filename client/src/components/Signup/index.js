@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import "./Signup.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
+import {storeUserDetails, getUserDetails} from "../../Util/functions"
 
 const Signup = () => {
   const [formDetails, setFormDetails] = useState({
@@ -13,15 +14,21 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [checkBox, setCheckBox] = useState(false);
+  
+  useEffect(() => {
+      console.log(`Logged ${checkBox}`);
+      storeUserDetails(checkBox,formDetails);
+  }, [checkBox]);
 
   const changeHandler = (e) => {
     setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
   };
 
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
-  //   console.log(formDetails);
-  // };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(formDetails);
+  };
 
   return (
     <div className="signup">
@@ -35,15 +42,17 @@ const Signup = () => {
           <form
             className="form"
             method="POST"
-            action="http://localhost:3001/add/user"
+            onSubmit={submitHandler}
           >
             <div className="name-group">
               <InputField
                 label="First Name"
+                auto_focus
                 properties={{
                   id: "firstName",
                   name: "firstName",
                   type: "text",
+                  className: formDetails.firstName ? "valid":"",
                   value: formDetails.firstName,
                   onChange: changeHandler,
                 }}
@@ -54,6 +63,7 @@ const Signup = () => {
                   id: "lastName",
                   name: "lastName",
                   type: "text",
+                  className: formDetails.lastName ? "valid":"",
                   value: formDetails.lastName,
                   onChange: changeHandler,
                 }}
@@ -65,6 +75,7 @@ const Signup = () => {
               properties={{
                 id: "email",
                 type: "email",
+                className: formDetails.email ? "valid":"",
                 name: "email",
                 value: formDetails.email,
                 onChange: changeHandler,
@@ -75,11 +86,19 @@ const Signup = () => {
               properties={{
                 id: "password",
                 type: "password",
+                className: formDetails.password ? "valid":"",
                 name: "password",
                 value: formDetails.password,
                 onChange: changeHandler,
               }}
             />
+            
+            <div className="remember"> 
+              {
+                  formDetails.firstName && formDetails.lastName && formDetails.email && formDetails.password ? <input type="checkbox" name="remember" id="remember" onChange={() => setCheckBox(!checkBox)} /> : <input type="checkbox" name="remember" id="remember" disabled  />
+              }
+              <label htmlFor="remember">Remember me</label>
+            </div>
             <Button>Sign up</Button>
           </form>
           <p>
