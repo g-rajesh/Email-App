@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
+
 const { User } = require("./models/UserModel");
 
 const app = express();
@@ -11,56 +13,76 @@ app.use(cors());
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Hello");
+    res.send("Hello");
 });
 
 // signup
 
 // working now
-app.post("/add/user", (req, res) => {
+app.post("/add/user", async (req, res) => {
 
-  // hashedPass = await bcrypt.hash(password, 12)
+    const hashedPass = await bcrypt.hash(req.body.password, 12)
 
-  const userData = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    // need to be hashed
-    password: req.body.password,
-  };
+    const userData = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: hashedPass,
+    };
 
-  const newUser = new User(userData);
-  newUser.save();
+    const newUser = await new User(userData);
+    await newUser.save();
 
-  return res.status(200).json({
-      message:"Account created successsfully", 
-      body: {
-        fullName: userData.firstName + " " + userData.lastName,
-        email: userData.email,
-      }
-  });
+    console.log(newUser);
+
+    return res.status(200).json({
+        message:"Account created successsfully", 
+        body: {
+            fullName: newUser.firstName + " " + newUser.lastName,
+            email: newUser.email,
+        }
+    });
 });
 
 // signin
-app.post("/authenticate/user", (req, res) => {
-  const { email, password } = req.body;
-  let found = false;
-  User.find().then((users) => {
-    users.forEach((user) => {
-      // need to decrypt and check
+app.post("/authenticate/user", async (req, res) => {
+    const { email, password } = req.body;
+    // let found = false;
+    const user = await User.findOne({email});
+    if(!user) {
+        return res.status(404).json({
+            message: "Not found"
+        });
+    }
 
-      // bcrypt.compare(hashedPass, password); -> returns boolean
+    const isEqual = await bcrypt.compare(password, user.password);
+    console.log(isEqual);
 
-      if (user.email === email && user.password === password) {
-        found = true;
-        res.redirect("http://localhost:3000/");
-      }
+    if(!isEqual) {
+        return res.status(404).json({
+            message: "Not found"
+        });
+    }
+
+    return res.status(200).json({
+        message: "Logged in"
     });
-  });
+
+    // User.find().then((users) => {
+    //     users.forEach((user) => {
+
+    //         bcrypt.compare(hashedPass, password);
+
+    //         if (user.email === email && user.password === password) {
+    //             found = true;
+    //             res.redirect("http://localhost:3000/");
+    //         }
+    //     });
+    // });
 });
 
 app.use((req, res) => {
-  res.send("404 Not Found");
+    res.send("404 Not Found");
 });
 
 const mongoDB =

@@ -53,8 +53,8 @@
   position: relative;
 }
 
-.right .field-group label,
-.right .field-group input:not(.valid) ~ label {
+.field-group label,
+.field-group input:not(.valid) ~ label {
   position: absolute;
   top: 50%;
   left: 0.8rem;

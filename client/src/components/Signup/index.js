@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import "./Signup.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
-import {storeUserDetails, getUserDetails} from "../../Util/functions"
+import {storeUserDetails} from "../../Util/functions"
 
 const Signup = () => {
     const [formDetails, setFormDetails] = useState({
@@ -15,6 +15,7 @@ const Signup = () => {
         password: "",
     });
     const [checkBox, setCheckBox] = useState(false);
+    const history = useHistory();
   
     useEffect(() => {
         console.log(`Logged ${checkBox}`);
@@ -36,7 +37,11 @@ const Signup = () => {
             body: JSON.stringify(formDetails),
         })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => {
+            if(data) {
+                history.push("/");
+            }
+        })
         .catch(err => console.log(err))
     };
 

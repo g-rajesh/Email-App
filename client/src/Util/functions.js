@@ -6,18 +6,12 @@ const privateKey = keys.private;
 
 export const storeUserDetails = (checkBox, formDetails) => {
   if (checkBox) {
-    // let encryptedText = QuickEncrypt.encrypt( "This is some super top secret text!", publicKey )
-
-    const firstName = QuickEncrypt.encrypt(formDetails.firstName, publicKey);
-    const lastName = QuickEncrypt.encrypt(formDetails.lastName, publicKey);
     const email = QuickEncrypt.encrypt(formDetails.email, publicKey);
     const password = QuickEncrypt.encrypt(formDetails.password, publicKey);
 
     localStorage.setItem(
       "userDetails",
       JSON.stringify({
-        firstName,
-        lastName,
         email,
         password,
       })
@@ -31,10 +25,13 @@ export const getUserDetails = () => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   let email = "";
   let password = "";
+  console.log(userDetails);
   if (userDetails) {
     email = QuickEncrypt.decrypt(userDetails.email, privateKey);
     password = QuickEncrypt.decrypt(userDetails.password, privateKey);
   }
+
+  console.log({email, password});
 
   return {
     email,
