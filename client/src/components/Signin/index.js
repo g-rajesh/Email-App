@@ -15,9 +15,9 @@ const Signin = () => {
 
   useEffect(()=>{
     const details = getUserDetails();
-    console.log(details, details.password);
+
     if(details){
-      setFormDetails({...formDetails, email: details.email, password: details.password});
+      setFormDetails({...details});
     }
   },[])
   const changeHandler = (e) => {

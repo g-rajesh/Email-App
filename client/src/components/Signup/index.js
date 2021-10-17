@@ -8,27 +8,37 @@ import InputField from "../../Util/InputField";
 import {storeUserDetails, getUserDetails} from "../../Util/functions"
 
 const Signup = () => {
-  const [formDetails, setFormDetails] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
-  const [checkBox, setCheckBox] = useState(false);
+    const [formDetails, setFormDetails] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+    });
+    const [checkBox, setCheckBox] = useState(false);
   
-  useEffect(() => {
-      console.log(`Logged ${checkBox}`);
-      storeUserDetails(checkBox,formDetails);
-  }, [checkBox]);
+    useEffect(() => {
+        console.log(`Logged ${checkBox}`);
+        storeUserDetails(checkBox,formDetails);
+    }, [checkBox]);
 
-  const changeHandler = (e) => {
-    setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
-  };
+    const changeHandler = (e) => {
+        setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
+    };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log(formDetails);
-  };
+    const submitHandler = (e) => {
+        e.preventDefault();    
+
+        fetch('http://localhost:8080/add/user', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify(formDetails),
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    };
 
   return (
     <div className="signup">

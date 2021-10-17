@@ -1,20 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Cors = require("cors");
+const cors = require("cors");
 const { User } = require("./models/UserModel");
 
 const app = express();
-const PORT = 3001;
-const mongoDB =
-  "mongodb+srv://Admin:admin123@cluster0.ulgdx.mongodb.net/Mailer?retryWrites=true&w=majority";
-mongoose.connect(mongoDB).then(() => {
-  app.listen(process.env.PORT || PORT, () =>
-    console.log("Successfully Connected to MongoDB")
-  );
-});
+const PORT = 8080;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(Cors());
+app.use(express.json());
+app.use(cors());
 
 // Routes
 app.get("/", (req, res) => {
@@ -22,8 +15,12 @@ app.get("/", (req, res) => {
 });
 
 // signup
+
+// working now
 app.post("/add/user", (req, res) => {
-  console.log("received");
+
+  // hashedPass = await bcrypt.hash(password, 12)
+
   const userData = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -34,7 +31,14 @@ app.post("/add/user", (req, res) => {
 
   const newUser = new User(userData);
   newUser.save();
-  res.redirect("http://localhost:3000/sign-in");
+
+  return res.status(200).json({
+      message:"Account created successsfully", 
+      body: {
+        fullName: userData.firstName + " " + userData.lastName,
+        email: userData.email,
+      }
+  });
 });
 
 // signin
@@ -44,6 +48,9 @@ app.post("/authenticate/user", (req, res) => {
   User.find().then((users) => {
     users.forEach((user) => {
       // need to decrypt and check
+
+      // bcrypt.compare(hashedPass, password); -> returns boolean
+
       if (user.email === email && user.password === password) {
         found = true;
         res.redirect("http://localhost:3000/");
@@ -54,4 +61,13 @@ app.post("/authenticate/user", (req, res) => {
 
 app.use((req, res) => {
   res.send("404 Not Found");
+});
+
+const mongoDB =
+  "mongodb+srv://Admin:admin123@cluster0.ulgdx.mongodb.net/Mailer?retryWrites=true&w=majority";
+  mongoose.connect(mongoDB).then(() => {
+    app.listen(process.env.PORT || PORT, () => {
+      console.log(`Listening to PORT ${PORT}`);
+      console.log("Successfully Connected to MongoDB");
+    });
 });
