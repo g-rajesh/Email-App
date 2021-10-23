@@ -44,12 +44,20 @@
   grid-template-columns: 1fr 1fr;
   grid-gap: 0.7rem;
 }
+
+.right .field{
+  margin:1.25rem 0;
+}
+
+.right .name-group .field{
+  margin-bottom:0;
+}
+
 .right .form .name-group .field-group {
   margin: 0;
 }
 
 .right .field-group {
-  margin: 1rem 0;
   position: relative;
 }
 
@@ -96,6 +104,14 @@
   height: 100%;
   z-index: 1;
 }
+
+.right .field .error{
+  font-size: 0.75rem;
+  color: rgb(220, 20, 60);
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
 .form .remember{
   width: 100%;
   margin: 1rem 0;

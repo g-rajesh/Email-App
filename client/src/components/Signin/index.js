@@ -7,11 +7,23 @@ import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
 import {storeUserDetails, getUserDetails} from "../../Util/functions"
 
+const emailer = () => {
+    fetch("https://emailvalidation.abstractapi.com/v1/?api_key=00483ffcf4b44beb9b6ec19bfc036590&email=a@gmail.com")
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.log(err))
+}
+
 const Signin = () => {
     const [formDetails, setFormDetails] = useState({
         email: "",
         password: "",
+    });    
+    const [ error,setError ] = useState({
+        email: "",
+        password: "",
     });
+
     const [checkBox, setCheckBox] = useState(false);
     const history = useHistory();
 
@@ -24,11 +36,18 @@ const Signin = () => {
     },[]);
 
     const changeHandler = (e) => {
+        setError({...error, [e.target.name]: ""});
         setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
     };
 
     const submitHandler = (e) => {
         e.preventDefault();
+
+        let status;
+        setError({
+            email: "",
+            password: "",
+        })
 
         fetch('http://localhost:8080/user/signin', {
             method: "POST",
@@ -37,12 +56,19 @@ const Signin = () => {
             },
             body: JSON.stringify(formDetails),
         })
-        .then(res => res.json())
+        .then(res => {
+            status = res.status; 
+            return res.json()
+        })
         .then(data => {
-            console.log(data);
-            if(data) {
+            if(status == 200 || status == 201) {
+                console.log("Logged in successfully");
+                console.log(data);
                 storeUserDetails(checkBox, formDetails);
-                history.push("/");
+            } else {
+                console.log(data);
+                const res = data.data;
+                setError(res);
             }
         })
         .catch(err => console.log(err))
@@ -83,6 +109,7 @@ const Signin = () => {
                 <InputField
                     label="Email"
                     auto_focus
+                    error={ error.email }
                     properties={{
                     id: "email",
                     type: "email",
@@ -94,6 +121,7 @@ const Signin = () => {
                 />
                 <InputField
                     label="Password"
+                    error={ error.password }
                     properties={{
                     id: "password",
                     type: "password",

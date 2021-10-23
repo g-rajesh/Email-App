@@ -14,15 +14,32 @@ const Signup = () => {
         email: "",
         password: "",
     });
+
+    const [error,setError] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+    });
+
     const [checkBox, setCheckBox] = useState(false);
     const history = useHistory();
   
     const changeHandler = (e) => {
+        setError({...error, [e.target.name]: ""});
         setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
     };
 
     const submitHandler = (e) => {
         e.preventDefault();   
+        
+        let status;
+        setError({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        })
 
         fetch('http://localhost:8080/user/signup', {
             method: "POST",
@@ -31,11 +48,19 @@ const Signup = () => {
             },
             body: JSON.stringify(formDetails),
         })
-        .then(res => res.json())
+        .then(res => {
+            status = res.status; 
+            return res.json()
+        })
         .then(data => {
-            if(data) {
+            if(status == 200 ) {
+                console.log("Account created successfully");
+                console.log(data);
                 storeUserDetails(checkBox, formDetails);
-                history.push("/");                
+            } else {
+                console.log(data);
+                const res = data.data;
+                setError(res);
             }
         })
         .catch(err => console.log(err))
@@ -59,6 +84,7 @@ const Signup = () => {
               <InputField
                 label="First Name"
                 auto_focus
+                error={ error.firstName }
                 properties={{
                   id: "firstName",
                   name: "firstName",
@@ -70,6 +96,7 @@ const Signup = () => {
               />
               <InputField
                 label="Last Name"
+                error={ error.lastName }
                 properties={{
                   id: "lastName",
                   name: "lastName",
@@ -83,6 +110,7 @@ const Signup = () => {
 
             <InputField
               label="Email"
+              error={ error.email }
               properties={{
                 id: "email",
                 type: "email",
@@ -94,6 +122,7 @@ const Signup = () => {
             />
             <InputField
               label="Password"
+              error={ error.password }
               properties={{
                 id: "password",
                 type: "password",
@@ -123,15 +152,10 @@ const Signup = () => {
       <div className="right">
         <div className="container">
           <h1>
-            Explore Your <br />
-            Creativity
+            Reliable Way for<br />
+            Mailing Mates
           </h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
-            odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla
-            quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-            mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
-          </p>
+         
           <span id="one"></span>
           <span id="two"></span>
           <span id="three"></span>

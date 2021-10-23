@@ -17,22 +17,26 @@ const InputField = (props) => {
       inputRef.current.focus();
     }
   }, []);
+
   return (
-    <div className="field-group">
-      <input
-        ref={inputRef}
-        className={props.properties.className ? `input ${props.properties.className}` : "input"}
-        {...props.properties}
-        autoComplete="off"
-      />
-      <label htmlFor={props.id}>{props.label}</label>
-      {props.label === "Password" ? (
-        !eye ? (
-          <FaEyeSlash onClick={() => setEye(!eye)} className="eyeIcon" />
-        ) : (
-          <FaEye onClick={() => setEye(!eye)} className="eyeIcon" />
-        )
-      ) : null}
+    <div className="field">
+      <div className="field-group">
+        <input
+          ref={inputRef}
+          className={props.properties.className ? `input ${props.properties.className}` : "input"}
+          {...props.properties}
+          autoComplete="off"
+        />
+        <label htmlFor={props.id}>{props.label}</label>
+        {props.label === "Password" ? (
+          !eye ? (
+            <FaEyeSlash onClick={() => setEye(!eye)} className="eyeIcon" />
+          ) : (
+            <FaEye onClick={() => setEye(!eye)} className="eyeIcon" />
+          )
+        ) : null}
+      </div>
+      {props.error && <span className="error">{props.error}</span>}
     </div>
   );
 };
