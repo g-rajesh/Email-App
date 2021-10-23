@@ -1,14 +1,24 @@
-import QuickEncrypt from "quick-encrypt";
+import CryptoJS from 'crypto-js';
 
-const keys = QuickEncrypt.generate(1024);
-const publicKey = keys.public;
-const privateKey = keys.private;
+const SECRET_KEY = "cdsjvejchdbec-rdcvejrn";
+
+const encryptData = (data) => {
+  return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+}
+
+const decryptData = (data) => {
+  var bytes  = CryptoJS.AES.decrypt(data, SECRET_KEY);
+  var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+  return originalText;
+}
 
 export const storeUserDetails = (checkBox, formDetails) => {
-  if (checkBox) {
-    const email = QuickEncrypt.encrypt(formDetails.email, publicKey);
-    const password = QuickEncrypt.encrypt(formDetails.password, publicKey);
 
+  const email = encryptData(formDetails.email);
+  const password = encryptData(formDetails.password);
+    
+  if (checkBox) {
     localStorage.setItem(
       "userDetails",
       JSON.stringify({
@@ -22,16 +32,15 @@ export const storeUserDetails = (checkBox, formDetails) => {
 };
 
 export const getUserDetails = () => {
+
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   let email = "";
   let password = "";
-  console.log(userDetails);
-  if (userDetails) {
-    email = QuickEncrypt.decrypt(userDetails.email, privateKey);
-    password = QuickEncrypt.decrypt(userDetails.password, privateKey);
-  }
 
-  console.log({email, password});
+  if (userDetails) {    
+    email = decryptData(userDetails.email);
+    password = decryptData(userDetails.password);
+  }
 
   return {
     email,

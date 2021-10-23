@@ -17,19 +17,14 @@ const Signup = () => {
     const [checkBox, setCheckBox] = useState(false);
     const history = useHistory();
   
-    useEffect(() => {
-        console.log(`Logged ${checkBox}`);
-        storeUserDetails(checkBox,formDetails);
-    }, [checkBox]);
-
     const changeHandler = (e) => {
         setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
     };
 
     const submitHandler = (e) => {
-        e.preventDefault();    
+        e.preventDefault();   
 
-        fetch('http://localhost:8080/add/user', {
+        fetch('http://localhost:8080/user/signup', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json" 
@@ -39,7 +34,8 @@ const Signup = () => {
         .then(res => res.json())
         .then(data => {
             if(data) {
-                history.push("/");
+                storeUserDetails(checkBox, formDetails);
+                history.push("/");                
             }
         })
         .catch(err => console.log(err))

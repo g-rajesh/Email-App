@@ -170,7 +170,6 @@
   width: 140px;
   background: rgb(252, 181, 50);
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
 }
 .right #two {
   position: absolute;
@@ -180,7 +179,6 @@
   width: 60px;
   background: rgb(247, 192, 42);
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
 }
 
 .right #three {
@@ -191,7 +189,6 @@
   width: 170px;
   background: #1d3557a6;
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
 }
 .right #four {
   position: absolute;
@@ -201,7 +198,6 @@
   width: 60px;
   background: #1d3557a6;
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
 }
 .right #five {
   position: absolute;
@@ -211,7 +207,6 @@
   width: 75px;
   background: #1d3557a6;
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
 }
 
 .right #five {
@@ -222,22 +217,4 @@
   width: 75px;
   background: #1d3557a6;
   transform: skewY(17deg);
-  animation: animateright 0.75s ease-in-out forwards;
-}
-@keyframes animateright {
-  0% {
-    transform: translateX(100px) skewY(17deg);
-  }
-  25% {
-    transform: translateX(75px) skewY(17deg);
-  }
-  50% {
-    transform: translateX(50px) skewY(17deg);
-  }
-  75% {
-    transform: translateX(25px) skewY(17deg);
-  }
-  100% {
-    transform: translateX(0) skewY(17deg);
-  }
 }

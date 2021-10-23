@@ -23,11 +23,6 @@ const Signin = () => {
         }
     },[]);
 
-    useEffect(() => {
-        console.log(`Logged ${checkBox}`);
-        storeUserDetails(checkBox, formDetails);
-    }, [checkBox]);
-
     const changeHandler = (e) => {
         setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
     };
@@ -35,21 +30,22 @@ const Signin = () => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-            fetch('http://localhost:8080/authenticate/user', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json" 
-                },
-                body: JSON.stringify(formDetails),
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                if(data) {
-                    history.push("/");
-                }
-            })
-            .catch(err => console.log(err))
+        fetch('http://localhost:8080/user/signin', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify(formDetails),
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data) {
+                storeUserDetails(checkBox, formDetails);
+                history.push("/");
+            }
+        })
+        .catch(err => console.log(err))
     };
 
     return (
