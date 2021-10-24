@@ -1,5 +1,3 @@
-// const fetch = require("node-fetch");
-
 const { User } = require("../models/UserModel");
 
 const isEmpty = (user, signup) => {
@@ -20,29 +18,11 @@ const isEmpty = (user, signup) => {
     return error;
 }
 
-const validateEmail = (email) => email.trim().contains("@");
+const validateEmail = (email) => {
+    console.log(email);
+    return email.trim().includes("@");
+};
 
-const isEmailAlreadyExist = (email)=>{
-    User.findOne({email})
-        .then(user=>{
-            return user?true:false;
-        })
-}
 
-// const isEmailValid = (email) => {
-//     fetch("https://email-checker.p.rapidapi.com/verify/v1?email=batmanae2@gmail.com", {
-//             "method": "GET",
-//             "headers": {
-//                 "x-rapidapi-host": "email-checker.p.rapidapi.com",
-//                 "x-rapidapi-key": "81b3ce736dmshe48e9549d29ddfap16bc2bjsnef50fd174fcf"
-//             }
-//         })
-//         .then(response => {
-//         console.log(response);
-//         })
-//         .catch(err => {
-//         console.error(err);
-//         });
-// }
 
-module.exports = { isEmpty, validateEmail, isEmailAlreadyExist }
+module.exports = { isEmpty, validateEmail }

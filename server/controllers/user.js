@@ -1,11 +1,48 @@
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
+const nodemailer = require("nodemailer");
 
 const { User } = require("../models/UserModel");
 const { isEmpty, validateEmail, isEmailAlreadyExist, isEmailValid } = require("../util/validate");
 
-exports.signup = (req, res, next) => {
+const sendEmail = (email, password) => {
+    // const indexOfAt = email.indexOf('@');
+    // const indexOfDot = email.slice(indexOfAt).indexOf('.')+indexOfAt;
+    // const service = email.slice(indexOfAt+1, indexOfDot);
+    
+    // const transporter = nodemailer.createTransport({
+    //     service,
+    //     auth: {
+    //         user: email,
+    //         pass: password
+    //     }
+    // });
 
-    isEmailValid("jsjs");
+    // var mailOptions = {
+    //     from: email,
+    //     to: "batmanae2@gmail.com",
+    //     subject: 'Email validation test',
+    //     text: 'Email verification held successfully!'
+    // };
+
+    // transporter.sendMail(mailOptions, (error, info)=>{
+    //     if (error) {
+    //         const authenticationEmailError = new Error("Either password is wrong or access denied");
+    //         authenticationEmailError.data = {
+    //             passwordValidator: false,
+    //             password: {
+    //                 message: "blah blah blah"
+    //             }
+    //         }
+    //         authenticationEmailError.status = 404;
+    //         throw authenticationEmailError;
+    //     } else {
+    //         console.log('Email sent: ' + info.response);
+    //     }
+    // });
+}
+
+exports.signup = (req, res, next) => { 
     const error = isEmpty(req.body, true);
     if(error.firstName || error.lastName || error.email || error.password) {
         const emptyError = new Error("Validation failed");
@@ -28,7 +65,7 @@ exports.signup = (req, res, next) => {
         throw emptyError;
     }
 
-    if(validateEmail(req.body.email)){
+    if(!(validateEmail(req.body.email))){
         const emailNotValidError = new Error("Email not valid");
         emailNotValidError.data = {
             email: "Enter a valid Email address"
@@ -36,16 +73,70 @@ exports.signup = (req, res, next) => {
         emailNotValidError.status = 500;
         throw emailNotValidError;
     }
-
-    if(isEmailAlreadyExist(req.body.email)){
-        const emailAlreadyExistError = new Error("Email already exist");
-        emailAlreadyExistError.data = {
-            email: "Email already exist"
+    const email = req.body.email;
+    User.findOne({email})
+    .then(user => {
+        if(user) {
+            const emailAlreadyExistError = new Error("Email already exist");
+            emailAlreadyExistError.data = {
+                email: "Email already exist"
+            }
+            emailAlreadyExistError.status = 500;
+            throw emailAlreadyExistError;
         }
-        emailAlreadyExistError.status = 500;
-        throw emailAlreadyExistError;
-    }
-    bcrypt.hash(req.body.password, 12)
+
+        return axios.get(`https://emailvalidation.abstractapi.com/v1/?api_key=00483ffcf4b44beb9b6ec19bfc036590&email=${email}`)
+          
+    })
+        .then(res => {
+            if(res.data.deliverability !== "DELIVERABLE") {
+                const notDeliverableEmailError = new Error("Email is not deliverable");
+                notDeliverableEmailError.data = {
+                    emailDeliverable: false,
+                }
+                notDeliverableEmailError.status = 404;
+                throw notDeliverableEmailError;
+            }
+            
+            // sendEmail(req.body.email,req.body.password)
+            // email sending starts here
+            const indexOfAt = req.body.email.indexOf('@');
+            const indexOfDot = req.body.email.slice(indexOfAt).indexOf('.')+indexOfAt;
+            const service = req.body.email.slice(indexOfAt+1, indexOfDot);
+            
+            const transporter = nodemailer.createTransport({
+                service,
+                auth: {
+                    user: req.body.email,
+                    pass: req.body.password
+                }
+            });
+
+            var mailOptions = {
+                from: req.body.email,
+                to: "batmanae2@gmail.com",
+                subject: 'Email validation test',
+                text: 'Email verification held successfully!'
+            };
+
+            try {
+                transporter.sendMail(mailOptions)
+            }
+            catch(err) {
+                const authenticationEmailError = new Error("Either password is wrong or access denied");
+                authenticationEmailError.data = {
+                    passwordValidator: false,
+                    password: {
+                        message: "blah blah blah"
+                    }
+                }
+                authenticationEmailError.status = 404;
+                next(authenticationEmailError);
+            }
+            
+            return bcrypt.hash(req.body.password, 12);
+            // email sending ends here     
+        })
         .then(hashedPass => {
             const userData = {
                 firstName: req.body.firstName,
@@ -61,7 +152,7 @@ exports.signup = (req, res, next) => {
         .then(user => {
             if(!user) {
                 const error = new Error("Creating user failed");
-                error.data = {
+                error.data = { 
                     error: "Creating user failed"
                 }
                 error.status = 404;
