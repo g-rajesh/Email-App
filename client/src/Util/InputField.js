@@ -12,6 +12,16 @@ const InputField = (props) => {
     props.properties.type = "text";
   }
 
+  let classname = "input";
+  if(props.properties.className) {
+    classname += " " + props.properties.className
+  }
+  if(props.error){
+    classname += " " + "error";
+  }
+
+  console.log(classname)
+
   useEffect(() => {
     if(props.auto_focus){
       inputRef.current.focus();
@@ -23,8 +33,8 @@ const InputField = (props) => {
       <div className="field-group">
         <input
           ref={inputRef}
-          className={props.properties.className ? `input ${props.properties.className}` : "input"}
           {...props.properties}
+          className={classname}
           autoComplete="off"
         />
         <label htmlFor={props.id}>{props.label}</label>

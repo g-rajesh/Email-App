@@ -56,13 +56,12 @@ exports.signup = (req, res, next) => {
       if (res.data.deliverability !== "DELIVERABLE") {
         const notDeliverableEmailError = new Error("Email is not deliverable");
         notDeliverableEmailError.data = {
-          emailDeliverable: false,
+          email: "Email is not deliverable"
         };
         notDeliverableEmailError.status = 404;
         throw notDeliverableEmailError;
       }
 
-      // email sending starts here
       const indexOfAt = req.body.email.indexOf("@");
       const indexOfDot =
         req.body.email.slice(indexOfAt).indexOf(".") + indexOfAt;
@@ -90,11 +89,9 @@ exports.signup = (req, res, next) => {
         const authenticationEmailError = new Error(
           "Either password is wrong or access denied"
         );
+        authenticationEmailError.showModal = true;
         authenticationEmailError.data = {
-          passwordValidator: false,
-          password: {
-            message: "Either password is wrong or access denied",
-          },
+          password:"Either password is wrong or access denied"
         };
         authenticationEmailError.status = 404;
         throw authenticationEmailError;
@@ -169,7 +166,7 @@ exports.signin = async (req, res, next) => {
       if (!user) {
         const error = new Error("User not found");
         error.data = {
-          email: "User not found!",
+          email: "User not found",
         };
         error.status = 404;
 

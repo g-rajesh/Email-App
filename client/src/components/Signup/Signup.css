@@ -72,6 +72,7 @@
   transition: all 0.2s;
 }
 
+
 .field-group input:focus ~ label,
 .field-group input.valid ~ label {
   top: 0;
@@ -104,7 +105,12 @@
   z-index: 1;
 }
 
-.left .field .error{
+.left .field-group input.error{
+  margin: 0;
+  border-color: rgb(220, 20, 60);
+}
+
+.left .field span.error{
   font-size: 0.75rem;
   color: rgb(220, 20, 60);
   display: inline-block;

@@ -105,6 +105,11 @@
   z-index: 1;
 }
 
+.right .field-group input.error{
+  margin: 0;
+  border-color: rgb(220, 20, 60);
+}
+
 .right .field .error{
   font-size: 0.75rem;
   color: rgb(220, 20, 60);

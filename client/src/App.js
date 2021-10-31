@@ -4,10 +4,12 @@ import "./index.css";
 import Home from "./components/Home";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
+import Modal from "./Util/Modal";
 
 const App = () => {
   return (
     <div className="App">
+      <Modal />
       <Router>
         <Switch>
           <Route path="/sign-up" component={Signup} />
