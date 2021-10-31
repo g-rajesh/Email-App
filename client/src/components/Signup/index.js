@@ -6,8 +6,13 @@ import "./Signup.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
 import { storeUserDetails } from "../../Util/functions";
+import { useGlobalContext } from "../../store/context";
 
 const Signup = () => {
+  const { showModalHandler } = useGlobalContext();
+  const ctx = useGlobalContext();
+  console.log(ctx);
+
   const [formDetails, setFormDetails] = useState({
     firstName: "",
     lastName: "",
@@ -53,13 +58,18 @@ const Signup = () => {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         if (status == 200) {
           console.log("Account created successfully");
           console.log(data);
           storeUserDetails(checkBox, formDetails);
           history.push("/");
         } else {
-          console.log(data);
+          console.log(data.data);
+          if (data.data.showModal) {
+            console.log(data.data);
+            showModalHandler();
+          }
           const res = data.data;
           setError(res);
         }

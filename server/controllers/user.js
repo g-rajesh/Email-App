@@ -56,7 +56,7 @@ exports.signup = (req, res, next) => {
       if (res.data.deliverability !== "DELIVERABLE") {
         const notDeliverableEmailError = new Error("Email is not deliverable");
         notDeliverableEmailError.data = {
-          email: "Email is not deliverable"
+          email: "Email is not deliverable",
         };
         notDeliverableEmailError.status = 404;
         throw notDeliverableEmailError;
@@ -89,9 +89,9 @@ exports.signup = (req, res, next) => {
         const authenticationEmailError = new Error(
           "Either password is wrong or access denied"
         );
-        authenticationEmailError.showModal = true;
         authenticationEmailError.data = {
-          password:"Either password is wrong or access denied"
+          password: "Either password is wrong or access denied",
+          showModal: true,
         };
         authenticationEmailError.status = 404;
         throw authenticationEmailError;

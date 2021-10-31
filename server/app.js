@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const userRoutes = require('./routes/user');
+const userRoutes = require("./routes/user");
 
 const app = express();
 const PORT = 8080;
@@ -10,7 +10,7 @@ const PORT = 8080;
 app.use(express.json());
 app.use(cors());
 
-app.use('/user', userRoutes);
+app.use("/user", userRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
