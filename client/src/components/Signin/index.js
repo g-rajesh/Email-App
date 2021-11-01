@@ -6,8 +6,10 @@ import "./Signin.css";
 import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
 import { storeUserDetails, getUserDetails } from "../../Util/functions";
+import { useGlobalContext } from "../../store/context";
 
 const Signin = () => {
+  const ctx = useGlobalContext();
   const [formDetails, setFormDetails] = useState({
     email: "",
     password: "",
@@ -57,6 +59,9 @@ const Signin = () => {
         if (status == 200 || status == 201) {
           console.log("Logged in successfully");
           console.log(data);
+          localStorage.setItem("token", JSON.stringify(data.data.token));
+          localStorage.setItem("username", JSON.stringify(data.data.email));
+          ctx.updateUserDetails();
           storeUserDetails(checkBox, formDetails);
           history.push("/");
         } else {
@@ -72,16 +77,8 @@ const Signin = () => {
     <div className="signin">
       <div className="left">
         <div className="container">
-          <h1>
-            Explore Your <br />
-            Creativity
-          </h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
-            odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla
-            quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-            mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
-          </p>
+          <h1>SECURED PASSAGE</h1>
+          <p>Our MailMan is safe and secure to use for confidential scripts.</p>
           <span id="one"></span>
           <span id="two"></span>
           <span id="three"></span>

@@ -6,6 +6,7 @@ import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Modal from "./Util/Modal";
 import { useGlobalContext } from "./store/context";
+import DynamicRoute from "./Util/DynamicRoute";
 
 const App = () => {
   const data = useGlobalContext();
@@ -16,9 +17,15 @@ const App = () => {
       {data.data.showModal && <Modal />}
       <Router>
         <Switch>
-          <Route path="/sign-up" component={Signup} />
-          <Route path="/sign-in" component={Signin} />
-          <Route path="/" component={Home} />
+          <DynamicRoute path="/sign-up" guest>
+            <Signup />
+          </DynamicRoute>
+          <DynamicRoute path="/sign-in" guest>
+            <Signin />
+          </DynamicRoute>
+          <DynamicRoute exact path="/" authenticated>
+            <Home />
+          </DynamicRoute>
         </Switch>
       </Router>
     </div>

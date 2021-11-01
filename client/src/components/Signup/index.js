@@ -61,7 +61,7 @@ const Signup = () => {
           localStorage.setItem("token", JSON.stringify(data.data.token));
           localStorage.setItem("username", JSON.stringify(data.data.email));
           ctx.updateUserDetails();
-          
+
           storeUserDetails(checkBox, formDetails);
           history.push("/");
         } else {
@@ -171,9 +171,7 @@ const Signup = () => {
             <br />
             <i>MAILING MATES</i>
           </h1>
-          <p>
-            Send and Receive your emails through a new path
-          </p>
+          <p>Send and Receive your emails through a new path in a safe way.</p>
           <span id="one"></span>
           <span id="two"></span>
           <span id="three"></span>
