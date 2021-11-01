@@ -9,9 +9,7 @@ import { storeUserDetails } from "../../Util/functions";
 import { useGlobalContext } from "../../store/context";
 
 const Signup = () => {
-  const { showModalHandler } = useGlobalContext();
   const ctx = useGlobalContext();
-  console.log(ctx);
 
   const [formDetails, setFormDetails] = useState({
     firstName: "",
@@ -60,15 +58,15 @@ const Signup = () => {
       .then((data) => {
         console.log(data);
         if (status == 200) {
-          console.log("Account created successfully");
-          console.log(data);
+          localStorage.setItem("token", JSON.stringify(data.data.token));
+          localStorage.setItem("username", JSON.stringify(data.data.email));
+          ctx.updateUserDetails();
+          
           storeUserDetails(checkBox, formDetails);
           history.push("/");
         } else {
-          console.log(data.data);
           if (data.data.showModal) {
-            console.log(data.data);
-            showModalHandler();
+            ctx.showModalHandler();
           }
           const res = data.data;
           setError(res);
@@ -169,15 +167,12 @@ const Signup = () => {
       <div className="right">
         <div className="container">
           <h1>
-            Reliable Way for
+            <i>RELIABLE WAY FOR</i>
             <br />
-            Mailing Mates
+            <i>MAILING MATES</i>
           </h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
-            odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla
-            quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-            mauris. Fusce nec tellus sed augue semper porta. Mauris massa.
+            Send and Receive your emails through a new path
           </p>
           <span id="one"></span>
           <span id="two"></span>

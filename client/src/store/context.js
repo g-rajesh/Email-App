@@ -3,25 +3,26 @@ import React, { useContext, useState } from "react";
 const AppContext = React.createContext();
 
 const initialState = {
-  user: null,
+  username: JSON.parse(localStorage.getItem('username')),
+  token: JSON.parse(localStorage.getItem('token')),
   showModal: false,
 };
 
+console.log(initialState);
+
 const AppProvider = ({ children }) => {
   const [data, setData] = useState(initialState);
+  
   const showModalHandler = () => {
-    console.log("Called");
-    // setData((previousState) => {
-    //   return {
-    //     ...previousState,
-    //     showModal: !previousState.showModal,
-    //   };
-    // });
     setData({ ...data, showModal: !data.showModal });
   };
 
+  const updateUserDetails = () => {
+    setData({...data, username: JSON.parse(localStorage.getItem('username')), token: JSON.parse(localStorage.getItem('token')) })
+  }
+
   return (
-    <AppContext.Provider value={{ data, showModalHandler }}>
+    <AppContext.Provider value={{ data, showModalHandler, updateUserDetails }}>
       {children}
     </AppContext.Provider>
   );

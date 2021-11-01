@@ -7,15 +7,6 @@ import Button from "../../Util/Button";
 import InputField from "../../Util/InputField";
 import { storeUserDetails, getUserDetails } from "../../Util/functions";
 
-const emailer = () => {
-  fetch(
-    "https://emailvalidation.abstractapi.com/v1/?api_key=00483ffcf4b44beb9b6ec19bfc036590&email=a@gmail.com"
-  )
-    .then((res) => res.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
-};
-
 const Signin = () => {
   const [formDetails, setFormDetails] = useState({
     email: "",

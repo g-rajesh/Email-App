@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken")
 
 const { User } = require("../models/UserModel");
 const { isEmpty, validateEmail } = require("../util/validate");
@@ -48,19 +49,24 @@ exports.signup = (req, res, next) => {
         throw emailAlreadyExistError;
       }
 
-      return axios.get(
-        `https://emailvalidation.abstractapi.com/v1/?api_key=00483ffcf4b44beb9b6ec19bfc036590&email=${email}`
-      );
+      return user;
+
+      // return axios.get(
+      //   `https://emailverification.whoisxmlapi.com/api/v1?apiKey=at_mXyP5olRuik6WATLBAExOD9QwD7hu&emailAddress=${email}`
+      // );
+
     })
     .then(async (res) => {
-      if (res.data.deliverability !== "DELIVERABLE") {
-        const notDeliverableEmailError = new Error("Email is not deliverable");
-        notDeliverableEmailError.data = {
-          email: "Email is not deliverable",
-        };
-        notDeliverableEmailError.status = 404;
-        throw notDeliverableEmailError;
-      }
+      // console.log(res.data.smtpCheck);      
+      // if (res.data.smtpCheck == "false") {
+      //   console.log("here");
+      //   const notDeliverableEmailError = new Error("Email is not deliverable");
+      //   notDeliverableEmailError.data = {
+      //     email: "Email is not deliverable",
+      //   };
+      //   notDeliverableEmailError.status = 404;
+      //   throw notDeliverableEmailError;
+      // }
 
       const indexOfAt = req.body.email.indexOf("@");
       const indexOfDot =
@@ -120,11 +126,19 @@ exports.signup = (req, res, next) => {
         throw error;
       }
 
+      const token = jwt.sign(
+        { email: user.email },
+        "myConnectWebsiteSecretCode",
+        { expiresIn: "1h" }
+      );
+
+    //   decodedToken = jwt.verify(token, "myConnectWebsiteSecretCode");
+
       return res.status(200).json({
         message: "Account created successsfully",
-        body: {
-          fullName: user.firstName + " " + user.lastName,
-          email: user.email,
+        data: {
+            email: user.email,
+            token,
         },
       });
     })
@@ -138,6 +152,8 @@ exports.signup = (req, res, next) => {
 
 exports.signin = async (req, res, next) => {
   const error = isEmpty(req.body, false);
+
+  let currUser;
 
   try {
     if (error.email || error.password) {
@@ -173,6 +189,8 @@ exports.signin = async (req, res, next) => {
         throw error;
       }
 
+      currUser = user;
+
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {
@@ -186,10 +204,17 @@ exports.signin = async (req, res, next) => {
         throw error;
       }
 
+      const token = jwt.sign(
+        { email: currUser.email },
+        "myConnectWebsiteSecretCode",
+        { expiresIn: "1h" }
+      );
+
       return res.status(200).json({
         message: "Logged in",
         data: {
           email,
+          token
         },
       });
     })
