@@ -8,8 +8,6 @@ const initialState = {
   showModal: false,
 };
 
-console.log(initialState);
-
 const AppProvider = ({ children }) => {
   const [data, setData] = useState(initialState);
   

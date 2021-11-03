@@ -10,7 +10,7 @@ const DynamicRoute = (props) => {
   } else if (props.guest && ctx.data.token) {
     return <Redirect to="/" />;
   } else {
-    return <Route component={props.children} {...props} />;
+    return <Route component={props.component} {...props} />;
   }
 };
 

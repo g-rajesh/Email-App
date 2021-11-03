@@ -10,7 +10,6 @@ import DynamicRoute from "./Util/DynamicRoute";
 
 const App = () => {
   const data = useGlobalContext();
-  console.log(data);
 
   return (
     <div className="App">

@@ -1,0 +1,17 @@
+.info{
+    width: 100%;
+    height: calc(100vh-70px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info img {
+    width: 280px;
+    height: 280px;
+    display: block;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
