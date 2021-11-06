@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Inbox from "./Inbox";
 import Content from "./Content";
 import "./Home.css";
+import Compose from "../../Util/Compose";
 
 const data = {
   inbox: [
@@ -41,12 +42,14 @@ const data = {
 
 const Home = () => {
   const [user, setUser] = useState(null);
+  const [showCompose, setShowCompose] = useState(true);
 
   const ctx = useGlobalContext();
 
   return (
     <div className="Home">
-      <Navbar />
+      <Navbar setShowCompose={setShowCompose} />
+      {showCompose && <Compose />}
       <div className="container">
         <Inbox data={data} setUser={setUser} />
         <Content user={user} />
