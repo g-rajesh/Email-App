@@ -14,6 +14,7 @@ const App = () => {
   return (
     <div className="App">
       {data.data.showModal && <Modal />}
+      {/* <Dummy /> */}
       <Router>
         <Switch>
           <DynamicRoute path="/sign-up" guest>

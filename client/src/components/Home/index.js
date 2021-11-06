@@ -42,14 +42,14 @@ const data = {
 
 const Home = () => {
   const [user, setUser] = useState(null);
-  const [showCompose, setShowCompose] = useState(true);
+  const [showCompose, setShowCompose] = useState(false);
 
   const ctx = useGlobalContext();
 
   return (
     <div className="Home">
       <Navbar setShowCompose={setShowCompose} />
-      {showCompose && <Compose />}
+      {showCompose && <Compose setShowCompose={setShowCompose} />}
       <div className="container">
         <Inbox data={data} setUser={setUser} />
         <Content user={user} />

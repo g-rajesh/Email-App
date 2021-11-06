@@ -1,9 +1,10 @@
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const { User } = require("../models/UserModel");
+const { encryptData, decryptData } = require("../util/validate");
 const { isEmpty, validateEmail } = require("../util/validate");
 
 exports.signup = (req, res, next) => {
@@ -54,10 +55,9 @@ exports.signup = (req, res, next) => {
       // return axios.get(
       //   `https://emailverification.whoisxmlapi.com/api/v1?apiKey=at_mXyP5olRuik6WATLBAExOD9QwD7hu&emailAddress=${email}`
       // );
-
     })
     .then(async (res) => {
-      // console.log(res.data.smtpCheck);      
+      // console.log(res.data.smtpCheck);
       // if (res.data.smtpCheck == "false") {
       //   console.log("here");
       //   const notDeliverableEmailError = new Error("Email is not deliverable");
@@ -90,7 +90,16 @@ exports.signup = (req, res, next) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        return bcrypt.hash(req.body.password, 12);
+        const hashedPass = encryptData(req.body.password);
+        const userData = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          password: hashedPass,
+        };
+
+        const newUser = new User(userData);
+        return newUser.save();
       } catch (e) {
         const authenticationEmailError = new Error(
           "Either password is wrong or access denied"
@@ -102,18 +111,6 @@ exports.signup = (req, res, next) => {
         authenticationEmailError.status = 404;
         throw authenticationEmailError;
       }
-    })
-    .then((hashedPass) => {
-      console.log(hashedPass);
-      const userData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: hashedPass,
-      };
-
-      const newUser = new User(userData);
-      return newUser.save();
     })
     .then((user) => {
       if (!user) {
@@ -132,13 +129,13 @@ exports.signup = (req, res, next) => {
         { expiresIn: "1h" }
       );
 
-    //   decodedToken = jwt.verify(token, "myConnectWebsiteSecretCode");
+      //   decodedToken = jwt.verify(token, "myConnectWebsiteSecretCode");
 
       return res.status(200).json({
         message: "Account created successsfully",
         data: {
-            email: user.email,
-            token,
+          email: user.email,
+          token,
         },
       });
     })
@@ -191,7 +188,7 @@ exports.signin = async (req, res, next) => {
 
       currUser = user;
 
-      return bcrypt.compare(password, user.password);
+      return password == decryptData(user.password);
     })
     .then((isEqual) => {
       if (!isEqual) {
@@ -214,7 +211,7 @@ exports.signin = async (req, res, next) => {
         message: "Logged in",
         data: {
           email,
-          token
+          token,
         },
       });
     })

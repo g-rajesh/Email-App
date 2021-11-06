@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const userRoutes = require("./routes/user");
+const mailRoutes = require("./routes/mail");
 
 const app = express();
 const PORT = 8080;
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/user", userRoutes);
+
+app.use("/mail", mailRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

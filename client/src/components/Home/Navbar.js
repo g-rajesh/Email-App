@@ -18,7 +18,7 @@ const Navbar = (props) => {
       </div>
       <div className="links">
         <ul className="nav-links">
-          <li>
+          <li onClick={() => props.setShowCompose(true)}>
             <FaPlus className="plus-icon" />
             <span className="text">New</span>
           </li>
