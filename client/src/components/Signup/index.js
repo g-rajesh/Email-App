@@ -167,11 +167,12 @@ const Signup = () => {
       <div className="right">
         <div className="container">
           <h1>
-            <i>RELIABLE WAY FOR</i>
+            RELIABLE WAY FOR
             <br />
-            <i>MAILING MATES</i>
+            MAILING MATES
           </h1>
-          <p>Send and Receive your emails through a new path in a safe way.</p>
+          <p>Send and Receive your emails through a new path in a safe way. Comfortable user interface to surf through the app. Navigate easily to your mailbox.</p>
+
           <span id="one"></span>
           <span id="two"></span>
           <span id="three"></span>

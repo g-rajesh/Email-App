@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaMicrophone, FaRegStopCircle } from "react-icons/fa";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 import "./Compose.css";
 
 const Compose = ({ setShowCompose }) => {
+  const {
+    transcript,
+    resetTranscript,
+  } = useSpeechRecognition();
+  SpeechRecognition.continuous = false;
+
+  const [recognizedText, setRecognizedText] = useState('');
+
   const [formDetails, setFormDetails] = useState({
     to: "",
     subject: "",
@@ -25,6 +34,46 @@ const Compose = ({ setShowCompose }) => {
     setError({ ...error, [e.target.name]: "" });
     setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
   };
+
+//   this is surya
+// im audible
+
+  useEffect(() => {
+    if(transcript)
+        setRecognizedText(transcript);
+  }, [transcript]);
+
+  const mic1Handler = (e) => {
+    if(micShow.mic1) {
+      resetTranscript();
+      SpeechRecognition.startListening();
+      setMicShow({ ...micShow, mic2: true, mic1: false });
+    }
+    else {
+      SpeechRecognition.stopListening();
+      let output = formDetails.subject + ' ' + recognizedText;
+      setFormDetails({...formDetails, subject: output});
+      setMicShow({ ...micShow, mic2: true, mic1: true });
+      resetTranscript();
+      setRecognizedText('');
+    }    
+  }
+  
+  const mic2Handler = (e) => {
+    if(micShow.mic2) {
+      resetTranscript();
+      SpeechRecognition.startListening();
+      setMicShow({ ...micShow, mic1: true, mic2: false });
+    }
+    else {
+      SpeechRecognition.stopListening();
+      let output = formDetails.body + ' ' + recognizedText;
+      setFormDetails({...formDetails, body: output});
+      setMicShow({ ...micShow, mic1: true, mic2: true });
+      resetTranscript();
+      setRecognizedText('');
+    }    
+  }
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -79,14 +128,12 @@ const Compose = ({ setShowCompose }) => {
             <label htmlFor="subject">Subject</label>
             {micShow.mic1 ? (
               <FaMicrophone
-                onClick={() =>
-                  setMicShow({ ...micShow, mic2: true, mic1: false })
-                }
+                onClick={mic1Handler}
                 className="mic1"
               />
             ) : (
               <FaRegStopCircle
-                onClick={() => setMicShow({ ...micShow, mic1: true })}
+              onClick={mic1Handler}
                 className="mic1"
               />
             )}
@@ -106,14 +153,12 @@ const Compose = ({ setShowCompose }) => {
             {micShow.mic2 ? (
               <FaMicrophone
                 className="mic2"
-                onClick={() =>
-                  setMicShow({ ...micShow, mic1: true, mic2: false })
-                }
+                onClick={mic2Handler}
               />
             ) : (
               <FaRegStopCircle
                 className="mic2"
-                onClick={() => setMicShow({ ...micShow, mic2: true })}
+                onClick={mic2Handler}
               />
             )}
           </div>

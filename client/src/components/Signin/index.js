@@ -78,7 +78,7 @@ const Signin = () => {
       <div className="left">
         <div className="container">
           <h1>SECURED PASSAGE</h1>
-          <p>Our MailMan is safe and secure to use for confidential scripts.</p>
+          <p>Our MailMan is safe and secure to use for confidential scripts. Your data is safely encrypted and stored securely.</p>
           <span id="one"></span>
           <span id="two"></span>
           <span id="three"></span>

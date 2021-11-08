@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 import Modal from "./Util/Modal";
 import { useGlobalContext } from "./store/context";
 import DynamicRoute from "./Util/DynamicRoute";
+// import Dummy from "./Dummy";
 
 const App = () => {
   const data = useGlobalContext();
