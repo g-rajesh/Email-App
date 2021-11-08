@@ -10,6 +10,9 @@
     color: #333;
 }
 
+.inbox .loader{
+    padding:1rem;
+}
 .inbox .inbox-items{
     margin-bottom: 1rem;
     list-style: none;

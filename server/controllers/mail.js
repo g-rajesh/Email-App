@@ -1,6 +1,9 @@
 const { User } = require("../models/UserModel");
 const nodemailer = require("nodemailer");
-const { decryptData } = require("../util/validate");
+const { encryptData, decryptData } = require("../util/validate");
+
+const Imap = require("imap");
+const { simpleParser } = require("mailparser");
 
 exports.sendMail = (req, res, next) => {
   const { to, subject, body } = req.body;
@@ -50,8 +53,8 @@ exports.sendMail = (req, res, next) => {
       var mailOptions = {
         from: user.email,
         to,
-        subject,
-        text: body,
+        subject: "SentFromMailer"+encryptData(subject),
+        text: encryptData(body),
       };
 
       try {
@@ -67,6 +70,7 @@ exports.sendMail = (req, res, next) => {
       console.log("Sent");
       res.status(200).json({
         message: "Mail sent Successfull",
+        sent:true
       });
     })
     .catch((err) => {
@@ -76,3 +80,79 @@ exports.sendMail = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getInbox = (req, res, next) => {
+
+  User.findOne({email: req.email})
+  .then((user) => {
+    const imapConfig = {
+      user: user.email,
+      password: decryptData(user.password),
+      host: "imap.gmail.com",
+      port: 993,
+      tls: true,
+      tlsOptions: { servername: "imap.gmail.com" },
+    };
+  
+    const imap = new Imap(imapConfig);
+    const inbox = [];
+  
+    const searchCallBack = (err, results) => {
+      const f = imap.fetch(results, { bodies: "" });
+  
+      f.on("message", (msg) => {
+        msg.on("body", (stream) => {
+          simpleParser(stream, async (err, parsed) => {
+            const { from, subject, text } = parsed;
+            if(subject.includes("SentFromMailer")){
+              inbox.push({from,subject:subject.slice(14),text,sentFromMailer:true})
+            }
+            else
+              inbox.push({ from, subject, text, sentFromMailer: false });
+          });
+        });
+      });
+  
+      f.once("error", (ex) => {
+        return Promise.reject(ex);
+      });
+  
+      f.once("end", () => {
+          console.log("Done fetching all messages!");
+          imap.end();
+        });
+      };
+  
+      const openBoxCallback = () => {
+        imap.search(["ALL", ["SINCE", new Date()]], searchCallBack);
+      };
+  
+      const onceCallback = () => {
+        imap.openBox("INBOX", false, openBoxCallback);
+      };
+  
+      try {
+        imap.once("ready", onceCallback);
+  
+        imap.once("error", (err) => {
+          console.log(err);
+        });
+
+        imap.once("end", () => {
+          console.log("Connection ended");
+          res.status(200).json({
+              data: inbox
+          });
+  
+        });
+  
+        imap.connect();
+      } catch (err) {
+        console.log(err);
+        console.log("An error occurred");
+      }
+  })
+  .catch(err => console.log(err));
+}
+
+// 

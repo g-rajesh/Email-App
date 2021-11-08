@@ -47,3 +47,5 @@ export const getUserDetails = () => {
     password,
   };
 };
+
+export {encryptData, decryptData}; 

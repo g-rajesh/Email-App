@@ -12,14 +12,19 @@
   "dependencies": {
     "axios": "^0.23.0",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "imap": "^0.8.19",
+    "imap-promise": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
+    "mailparser": "^3.4.0",
     "mongoose": "^6.0.11",
     "nodemailer": "^6.7.0",
     "nodemon": "^2.0.13",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "util": "^0.12.4"
   }
 }

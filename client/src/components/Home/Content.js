@@ -1,10 +1,15 @@
-import React from "react";
-
+import React, {useState, useEffect} from "react";
 import ContentImage from "../../images/content.png";
 import "./Content.css";
 
-const Content = ({ user }) => {
-  if (!user) {
+const Content = ({ user, decryptHandler }) => {
+  const [isDecrypted, setIsDecrypted] = useState(false);
+
+  useEffect(() => {
+    setIsDecrypted(false);
+  }, []);
+  
+ if (!user) {
     return (
       <div className="info">
         <img src={ContentImage} alt="email" />
@@ -13,6 +18,11 @@ const Content = ({ user }) => {
     );
   }
 
+  const handleDecrypt = () => {
+    decryptHandler(isDecrypted);
+    setIsDecrypted((prevState) => !prevState);
+  }
+  
   return (
     <div className="contents">
       <div className="header">
@@ -20,11 +30,15 @@ const Content = ({ user }) => {
           <span>{user.name[0]}</span>
           <span>{user.sender}</span>
         </div>
-        <button className="right">Decrypt</button>
+        {user.sentFromMailer && 
+          <button className="right" onClick={handleDecrypt}>
+            {isDecrypted ? "Encrypt" : "Decrypt"}
+          </button>
+        }
       </div>
       <div className="body">
         <p>{user.subject}</p>
-        <p>{user.email}</p>
+        <p>{user.body}</p>
       </div>
     </div>
   );

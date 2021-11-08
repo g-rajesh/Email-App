@@ -6,13 +6,14 @@ import "./Compose.css";
 
 const Compose = ({ setShowCompose }) => {
   const {
-    transcript,
-    resetTranscript,
+      listening,
+      transcript,
+      resetTranscript,
   } = useSpeechRecognition();
   SpeechRecognition.continuous = false;
 
   const [recognizedText, setRecognizedText] = useState('');
-
+  const [sent, setSent] = useState(false);
   const [formDetails, setFormDetails] = useState({
     to: "",
     subject: "",
@@ -35,9 +36,18 @@ const Compose = ({ setShowCompose }) => {
     setFormDetails({ ...formDetails, [e.target.name]: e.target.value });
   };
 
-//   this is surya
-// im audible
+  useEffect(() => {
+    let timer;
+    if(sent) {
+        timer = setTimeout(() => {
+            setShowCompose(false);
+        }, 3000);
+      }
 
+      return () => clearTimeout(timer);
+      
+  }, [sent]);
+  
   useEffect(() => {
     if(transcript)
         setRecognizedText(transcript);
@@ -45,6 +55,7 @@ const Compose = ({ setShowCompose }) => {
 
   const mic1Handler = (e) => {
     if(micShow.mic1) {
+      setRecognizedText('');
       resetTranscript();
       SpeechRecognition.startListening();
       setMicShow({ ...micShow, mic2: true, mic1: false });
@@ -61,6 +72,7 @@ const Compose = ({ setShowCompose }) => {
   
   const mic2Handler = (e) => {
     if(micShow.mic2) {
+      setRecognizedText('');
       resetTranscript();
       SpeechRecognition.startListening();
       setMicShow({ ...micShow, mic1: true, mic2: false });
@@ -77,6 +89,8 @@ const Compose = ({ setShowCompose }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    let status;
     const userToken = JSON.parse(localStorage.getItem("token"));
     fetch("http://localhost:8080/mail/send", {
       method: "POST",
@@ -87,17 +101,49 @@ const Compose = ({ setShowCompose }) => {
       body: JSON.stringify(formDetails),
     })
       .then((res) => {
-        if (res.status == 200) {
-          console.log("Mail sent");
-        }
+        status = res.status;
         return res.json();
       })
       .then((data) => {
+        if(status==404){
+          setError(data.data);
+        }else{
+          setSent(true);
+        }
         console.log(data);
       })
       .catch((err) => console.log(err));
   };
-
+  
+  let subjectClassName="input";
+  let bodyClassName="input";
+  let toClassName = "input";
+  if(formDetails.to){
+    toClassName += " valid";
+  }
+  if(error.to){
+    toClassName+=" error";
+  }
+  if(formDetails.subject){
+    subjectClassName += " valid"
+  }
+  if(listening && !micShow.mic1){
+    subjectClassName += " listening"
+  }
+  if(error.subject){
+    subjectClassName += " error";
+  }
+  
+  if(formDetails.body) {
+    bodyClassName += " valid";
+  }
+  if(listening && !micShow.mic2) {
+    bodyClassName += " listening";
+  }
+  if(error.body){
+    bodyClassName += " error";
+  }
+  
   return (
     <div className="compose">
       <div className="compose_container">
@@ -105,63 +151,77 @@ const Compose = ({ setShowCompose }) => {
           <h2>Compose Mail</h2>
         </div>
         <div className="form">
-          <div className="input-group">
-            <input
-              className={formDetails.to ? "input valid" : "input"}
-              type="email"
-              name="to"
-              id="to"
-              value={formDetails.to}
-              onChange={changeHandler}
-            />
-            <label htmlFor="to">To</label>
+            
+            <div className="ipContainer">
+                <div className="input-group">
+                    <input
+                        className={toClassName}
+                        type="email"
+                        name="to"
+                        id="to"
+                        value={formDetails.to}
+                        onChange={changeHandler}
+                    />
+                    <label htmlFor="to">To</label>
+                </div>
+                <span>{error.to}</span>
+            </div>
+          
+            <div className="ipContainer">
+                <div className="input-group">
+                    <input
+                        className={subjectClassName}
+                        type="text"
+                        name="subject"
+                        id="subject"
+                        value={formDetails.subject}
+                        onChange={changeHandler}
+                    />
+                    <label htmlFor="subject">Subject</label>
+                    {micShow.mic1 ? (
+                    <FaMicrophone
+                        onClick={mic1Handler}
+                        className="mic1"
+                    />
+                    ) : (
+                        <FaRegStopCircle
+                        onClick={mic1Handler}
+                            className="mic1"
+                        />
+                    )}
+                </div>
+                <span>{error.subject}</span>
+            </div>
+          
+          <div className="ipContainer">
+            <div className="input-group">
+              <textarea
+                className={bodyClassName}
+                type="text"
+                name="body"
+                id="body"
+                value={formDetails.body}
+                onChange={changeHandler}
+              />
+              <label htmlFor="body" className="body-label">
+                Body
+              </label>
+              {micShow.mic2 ? (
+                <FaMicrophone
+                  className="mic2"
+                  onClick={mic2Handler}
+                />
+              ) : (
+                <FaRegStopCircle
+                  className="mic2"
+                  onClick={mic2Handler}
+                />
+              )}
+            </div>
+            <span>{error.subject}</span>
           </div>
-          <div className="input-group">
-            <input
-              className={formDetails.subject ? "input valid" : "input"}
-              type="text"
-              name="subject"
-              id="subject"
-              value={formDetails.subject}
-              onChange={changeHandler}
-            />
-            <label htmlFor="subject">Subject</label>
-            {micShow.mic1 ? (
-              <FaMicrophone
-                onClick={mic1Handler}
-                className="mic1"
-              />
-            ) : (
-              <FaRegStopCircle
-              onClick={mic1Handler}
-                className="mic1"
-              />
-            )}
-          </div>
-          <div className="input-group">
-            <textarea
-              className={formDetails.body ? "input valid" : "input"}
-              type="text"
-              name="body"
-              id="body"
-              value={formDetails.body}
-              onChange={changeHandler}
-            />
-            <label htmlFor="body" className="body-label">
-              Body
-            </label>
-            {micShow.mic2 ? (
-              <FaMicrophone
-                className="mic2"
-                onClick={mic2Handler}
-              />
-            ) : (
-              <FaRegStopCircle
-                className="mic2"
-                onClick={mic2Handler}
-              />
-            )}
-          </div>
+
+          {sent && <span className="alertMessage">Mail sent successfully</span>}
           <div className="button-group">
             <span onClick={() => setShowCompose(false)}>Cancel</span>
             <span onClick={submitHandler}>Send</span>
