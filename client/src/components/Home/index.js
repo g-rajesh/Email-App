@@ -13,6 +13,7 @@ const Home = () => {
   const [showCompose, setShowCompose] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isDecrypted, setIsDecrypted] = useState(false);
 
   const ctx = useGlobalContext();
 
@@ -69,8 +70,8 @@ const Home = () => {
       <Navbar setShowCompose={setShowCompose} />
       {showCompose && <Compose setShowCompose={setShowCompose} />}
       <div className="container">
-        <Inbox data={data} setUser={setUser} loading={loading} />
-        <Content user={user} decryptHandler={decryptHandler} />
+        <Inbox data={data} setUser={setUser} loading={loading} setIsDecrypted={setIsDecrypted} />
+        <Content user={user} decryptHandler={decryptHandler} isDecrypted={isDecrypted} setIsDecrypted={setIsDecrypted} />
       </div>
     </div>
   );

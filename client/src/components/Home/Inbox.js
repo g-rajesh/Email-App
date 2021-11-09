@@ -2,7 +2,13 @@ import React from "react";
 
 import "./Inbox.css";
 
-const Inbox = ({ setUser, data, loading }) => {
+const Inbox = ({ setUser, data, loading, setIsDecrypted }) => {
+
+  const clickHandler = (item) => {
+    setUser(item);
+    setIsDecrypted(false);
+  }
+
   return (
     <div className="inbox">
       <h1>Inbox</h1>
@@ -11,7 +17,7 @@ const Inbox = ({ setUser, data, loading }) => {
           <ul className="inbox-items">
           {data.map((item,index) => {
             return (
-              <li onClick={() => setUser(item)} key={item.index}>
+              <li onClick={() => clickHandler(item)} key={item.index}>
                 <span>{item.name[0]}</span>
                 <div className="left">
                   <h2>{item.name}</h2>

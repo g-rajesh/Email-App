@@ -124,7 +124,7 @@ exports.getInbox = (req, res, next) => {
       };
   
       const openBoxCallback = () => {
-        imap.search(["ALL", ["SINCE", new Date()]], searchCallBack);
+        imap.search(["ALL", ["SINCE", new Date('11-08-2021')]], searchCallBack);
       };
   
       const onceCallback = () => {

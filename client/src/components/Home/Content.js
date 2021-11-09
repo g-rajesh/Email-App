@@ -2,12 +2,8 @@ import React, {useState, useEffect} from "react";
 import ContentImage from "../../images/content.png";
 import "./Content.css";
 
-const Content = ({ user, decryptHandler }) => {
-  const [isDecrypted, setIsDecrypted] = useState(false);
+const Content = ({ user, decryptHandler, isDecrypted, setIsDecrypted }) => {
 
-  useEffect(() => {
-    setIsDecrypted(false);
-  }, []);
   
  if (!user) {
     return (
