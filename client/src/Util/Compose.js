@@ -14,6 +14,7 @@ const Compose = ({ setShowCompose }) => {
 
   const [recognizedText, setRecognizedText] = useState('');
   const [sent, setSent] = useState(false);
+  const [mailSent, setMailSent] = useState(false);
   const [formDetails, setFormDetails] = useState({
     to: "",
     subject: "",
@@ -90,6 +91,8 @@ const Compose = ({ setShowCompose }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    setMailSent(true);
+    
     let status;
     const userToken = JSON.parse(localStorage.getItem("token"));
     fetch("http://localhost:8080/mail/send", {
@@ -109,8 +112,8 @@ const Compose = ({ setShowCompose }) => {
           setError(data.data);
         }else{
           setSent(true);
-        }
-        console.log(data);
+        }        
+        setMailSent(false);
       })
       .catch((err) => console.log(err));
   };
@@ -224,7 +227,7 @@ const Compose = ({ setShowCompose }) => {
           {sent && <span className="alertMessage">Mail sent successfully</span>}
           <div className="button-group">
             <span onClick={() => setShowCompose(false)}>Cancel</span>
-            <span onClick={submitHandler}>Send</span>
+            <span onClick={submitHandler} className={mailSent && 'sent'}>Send</span>
           </div>
         </div>
       </div>

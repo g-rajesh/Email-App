@@ -135,6 +135,12 @@
   color: #fff;
 }
 
+.form .button-group span.sent { 
+    background: hsl(219, 100%, 60%);
+    pointer-events: none; 
+    cursor: not-allowed;
+}
+
 .form .button-group span:first-child {
   margin-right: 1rem;
 }

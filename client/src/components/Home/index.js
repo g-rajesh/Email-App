@@ -70,7 +70,7 @@ const Home = () => {
       <Navbar setShowCompose={setShowCompose} />
       {showCompose && <Compose setShowCompose={setShowCompose} />}
       <div className="container">
-        <Inbox data={data} setUser={setUser} loading={loading} setIsDecrypted={setIsDecrypted} />
+        <Inbox data={data} setData={setData} setUser={setUser} loading={loading} setIsDecrypted={setIsDecrypted} />
         <Content user={user} decryptHandler={decryptHandler} isDecrypted={isDecrypted} setIsDecrypted={setIsDecrypted} />
       </div>
     </div>

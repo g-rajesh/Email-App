@@ -19,6 +19,10 @@
 
 .contents {
   padding: 2.5rem;
+  width: 100%;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  word-wrap: break-word;
 }
 
 .contents .header {
