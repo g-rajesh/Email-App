@@ -1,13 +1,13 @@
 import React from "react";
+import { VscRefresh } from 'react-icons/vsc';
 
 import "./Inbox.css";
 
-const Inbox = ({ setUser, data, setData, loading, setIsDecrypted }) => {
+const Inbox = ({ setUser, data, setData, loading, getMail }) => {
 
   const clickHandler = (item, index) => {
     setUser(item);
-    setIsDecrypted(false);
-    const newData = data.map((item, i)=>{
+    const newData = data.map((item, i) => {
       item.active = false;
       if(i===index){
         item.active = true;
@@ -20,7 +20,10 @@ const Inbox = ({ setUser, data, setData, loading, setIsDecrypted }) => {
 
   return (
     <div className="inbox">
-      <h1>Inbox</h1>
+      <div className="flex">
+        <h1>Inbox</h1>
+        <VscRefresh className="refresh" onClick={getMail}/>
+      </div>
       {
         loading ? <p className="loader">Loading...</p> : 
           <ul className="inbox-items">

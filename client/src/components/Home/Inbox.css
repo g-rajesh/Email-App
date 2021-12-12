@@ -4,10 +4,23 @@
     overflow: auto;
 }
 
-.inbox h1 {
+.inbox .flex {
     padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inbox .flex h1 {
     font-size: 1.75rem;
     color: #333;
+}
+
+.inbox .flex .refresh {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #0057fb;
+    cursor: pointer;
 }
 
 .inbox .loader{

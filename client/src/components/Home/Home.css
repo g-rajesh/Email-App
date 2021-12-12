@@ -58,6 +58,10 @@
     border-radius: 20px;
 }
 
+.navBar .links .nav-links li .lock {
+    color: #0057fb;
+}
+
 .navBar .links .nav-links li .plus-icon{
     color: #0057fb;
     font-size: 0.9rem;

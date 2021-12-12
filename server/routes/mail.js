@@ -7,5 +7,6 @@ const userController = require("../controllers/mail");
 
 router.post("/send", isAuth, userController.sendMail);
 router.get("/receive", isAuth, userController.getInbox);
+router.post("/verifyPassword", isAuth, userController.verifyPassword);
 
 module.exports = router;

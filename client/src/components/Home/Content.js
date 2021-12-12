@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ContentImage from "../../images/content.png";
 import "./Content.css";
 
-const Content = ({ user, decryptHandler, isDecrypted, setIsDecrypted }) => {
+const Content = ({ user }) => {
 
   
  if (!user) {
@@ -14,10 +14,10 @@ const Content = ({ user, decryptHandler, isDecrypted, setIsDecrypted }) => {
     );
   }
 
-  const handleDecrypt = () => {
-    decryptHandler(isDecrypted);
-    setIsDecrypted((prevState) => !prevState);
-  }
+  // const handleDecrypt = () => {
+  //   decryptHandler(isDecrypted);
+  //   setIsDecrypted((prevState) => !prevState);
+  // }
   
   return (
     <div className="contents">
@@ -26,11 +26,11 @@ const Content = ({ user, decryptHandler, isDecrypted, setIsDecrypted }) => {
           <span>{user.name[0]}</span>
           <span>{user.sender}</span>
         </div>
-        {user.sentFromMailer && 
+        {/* {user.sentFromMailer && 
           <button className="right" onClick={handleDecrypt}>
             {isDecrypted ? "Encrypt" : "Decrypt"}
           </button>
-        }
+        } */}
       </div>
       <div className="body">
         <p>{user.subject}</p>

@@ -6,6 +6,7 @@ import Inbox from "./Inbox";
 import Content from "./Content";
 import "./Home.css";
 import Compose from "../../Util/Compose";
+import DecryptModal from "./DecryptModal";
 import {decryptData, encryptData} from '../../Util/functions';
 
 const Home = () => {
@@ -14,10 +15,11 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isDecrypted, setIsDecrypted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const ctx = useGlobalContext();
 
-  useEffect(()=>{
+  const getMail = ()=>{
     const token = JSON.parse(localStorage.getItem('token'));
     setLoading(true);
     fetch('http://localhost:8080/mail/receive',{
@@ -48,30 +50,55 @@ const Home = () => {
       setLoading(false);
     })
     .catch(err => console.log(err));
+
+  }
+  useEffect(()=>{
+    getMail();
   },[])
 
-  const decryptHandler = (decrypted) => {
-    if(!decrypted){
-      setUser({
+  const decryptHandler = () => {
+    const newUser = data.map(user => {
+      if(!user.sentFromMailer)
+        return user;
+      return {
         ...user,
         subject: decryptData(user.subject),
         body: decryptData(user.body)
-      })
-    } else {
-      setUser({
+      };
+    });
+
+    setUser(null);
+
+    setData(newUser);
+    setShowModal(false);
+    setIsDecrypted(true);
+  }
+
+  const encryptHandler = () => {
+    const newUser = data.map(user => {
+      if(!user.sentFromMailer)
+        return user;
+      return {
         ...user,
         subject: encryptData(user.subject),
         body: encryptData(user.body)
-      })
-    }
+      };
+    });
+
+    setData(newUser);
+    setUser(null);
+    setIsDecrypted(false);
   }
+
+
   return (
     <div className="Home">
-      <Navbar setShowCompose={setShowCompose} />
+      <Navbar setShowCompose={setShowCompose} setShowModal={setShowModal} isDecrypted={isDecrypted} setIsDecrypted={setIsDecrypted} decryptHandler={decryptHandler} encryptHandler={encryptHandler} />
       {showCompose && <Compose setShowCompose={setShowCompose} />}
+      {showModal && <DecryptModal setShowModal={setShowModal} decryptHandler={decryptHandler} />}
       <div className="container">
-        <Inbox data={data} setData={setData} setUser={setUser} loading={loading} setIsDecrypted={setIsDecrypted} />
-        <Content user={user} decryptHandler={decryptHandler} isDecrypted={isDecrypted} setIsDecrypted={setIsDecrypted} />
+        <Inbox data={data} setData={setData} setUser={setUser} loading={loading} getMail={getMail} />
+        <Content user={user} />
       </div>
     </div>
   );

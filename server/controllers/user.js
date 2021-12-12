@@ -50,23 +50,21 @@ exports.signup = (req, res, next) => {
         throw emailAlreadyExistError;
       }
 
-      return user;
-
-      // return axios.get(
-      //   `https://emailverification.whoisxmlapi.com/api/v1?apiKey=at_mXyP5olRuik6WATLBAExOD9QwD7hu&emailAddress=${email}`
-      // );
+      return axios.get(
+        `https://emailverification.whoisxmlapi.com/api/v1?apiKey=at_mXyP5olRuik6WATLBAExOD9QwD7hu&emailAddress=${email}`
+      );
     })
     .then(async (res) => {
       // console.log(res.data.smtpCheck);
-      // if (res.data.smtpCheck == "false") {
-      //   console.log("here");
-      //   const notDeliverableEmailError = new Error("Email is not deliverable");
-      //   notDeliverableEmailError.data = {
-      //     email: "Email is not deliverable",
-      //   };
-      //   notDeliverableEmailError.status = 404;
-      //   throw notDeliverableEmailError;
-      // }
+      if (res.data.smtpCheck == "false") {
+        // console.log("here");
+        const notDeliverableEmailError = new Error("Email is not deliverable");
+        notDeliverableEmailError.data = {
+          email: "Email is not deliverable",
+        };
+        notDeliverableEmailError.status = 404;
+        throw notDeliverableEmailError;
+      }
 
       const indexOfAt = req.body.email.indexOf("@");
       const indexOfDot =

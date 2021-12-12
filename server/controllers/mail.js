@@ -1,6 +1,7 @@
 const { User } = require("../models/UserModel");
 const nodemailer = require("nodemailer");
 const { encryptData, decryptData } = require("../util/validate");
+const {sort} = require("../util/sort");
 
 const Imap = require("imap");
 const { simpleParser } = require("mailparser");
@@ -103,12 +104,12 @@ exports.getInbox = (req, res, next) => {
       f.on("message", (msg) => {
         msg.on("body", (stream) => {
           simpleParser(stream, async (err, parsed) => {
-            const { from, subject, text } = parsed;
+            const { from, subject, text, date } = parsed;
             if(subject.includes("SentFromMailer")){
-              inbox.push({from,subject:subject.slice(14),text,sentFromMailer:true})
+              inbox.push({from,subject:subject.slice(14),text, date, sentFromMailer:true})
             }
             else
-              inbox.push({ from, subject, text, sentFromMailer: false });
+              inbox.push({ from, subject, text, date, sentFromMailer: false });
           });
         });
       });
@@ -140,10 +141,10 @@ exports.getInbox = (req, res, next) => {
 
         imap.once("end", () => {
           console.log("Connection ended");
+          const sortedInbox = sort(inbox);
           res.status(200).json({
-              data: inbox
+              data: sortedInbox
           });
-  
         });
   
         imap.connect();
@@ -155,4 +156,33 @@ exports.getInbox = (req, res, next) => {
   .catch(err => console.log(err));
 }
 
-// 
+exports.verifyPassword = (req, res, next) => {
+  const { password } = req.body;
+  console.log(req.body, 160);
+
+  if(password.trim().length === 0) {
+    const passwordError = new Error("Password must be 6 characters long");
+    passwordError.status = 404;
+    passwordError.data = { password: "Password must be 6 characters long" };
+    next(passwordError);
+  }
+
+  User.findOne({email: req.email})
+  .then(user => {
+    if(decryptData(user.password) !== password) {
+      const passwordError = new Error("Incorrect password");
+      passwordError.status = 404;
+      passwordError.data = { password: "Incorrect password" };
+      throw passwordError;
+    }
+
+    return res.status(200).json({
+      message: "Password is valid",
+    });
+    
+  })
+  .catch(err => {
+    if(!err.status) err.status = 500;
+    next(err);
+  })
+}

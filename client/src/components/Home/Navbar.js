@@ -1,9 +1,10 @@
 import React from "react";
 import { MdEmail } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
+import { BiLockOpenAlt, BiLockAlt } from 'react-icons/bi';
 import { HiOutlineLogout } from "react-icons/hi";
 
-const Navbar = (props) => {
+const Navbar = ({ setShowCompose, isDecrypted, setShowModal, encryptHandler }) => {
   const logoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
@@ -18,10 +19,21 @@ const Navbar = (props) => {
       </div>
       <div className="links">
         <ul className="nav-links">
-          <li onClick={() => props.setShowCompose(true)}>
+          <li onClick={() => setShowCompose(true)}>
             <FaPlus className="plus-icon" />
             <span className="text">New</span>
           </li>
+          {!isDecrypted ?
+            <li onClick={()=>{setShowModal(true);}}>
+              <BiLockOpenAlt className="lock" />
+              <span className="text">Decrypt</span>
+            </li>
+            :
+            <li>
+              <BiLockAlt className="lock" />
+              <span className="text" onClick={encryptHandler}>Encrypt</span>
+            </li>
+          }
           <li onClick={logoutHandler}>
             <HiOutlineLogout className="logoutIcon" />
             <span className="text">Logout</span>
