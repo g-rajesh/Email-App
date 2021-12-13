@@ -20,6 +20,7 @@ const Home = () => {
   const ctx = useGlobalContext();
 
   const getMail = () => {
+    setUser(null);
     const token = JSON.parse(localStorage.getItem("token"));
     setLoading(true);
 
@@ -61,7 +62,9 @@ const Home = () => {
             };
           });
           setData(inbox);
+          setUser(null);
           setLoading(false);
+          setIsDecrypted(false);
         }
       })
       .catch((err) => console.log(err));
