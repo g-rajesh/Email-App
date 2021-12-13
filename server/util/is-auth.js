@@ -13,7 +13,15 @@ module.exports = (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, "myConnectWebsiteSecretCode");
   } catch (err) {
-    err.status = 500;
+    if (err.message === "jwt expired") {
+      const tokenExpiredError = new Error("Token Expired");
+      tokenExpiredError.status = 401;
+      tokenExpiredError.data = {
+        error: "JWT token Expired",
+      };
+      throw tokenExpiredError;
+    }
+    console.log(err.status, err.message);
     throw err;
   }
 

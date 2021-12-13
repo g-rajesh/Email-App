@@ -132,8 +132,8 @@ exports.signup = (req, res, next) => {
       return res.status(200).json({
         message: "Account created successsfully",
         data: {
-            email: user.email,
-            token,
+          email: user.email,
+          token,
         },
       });
     })

@@ -1,11 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import ContentImage from "../../images/content.png";
 import "./Content.css";
 
 const Content = ({ user }) => {
-
-  
- if (!user) {
+  if (!user) {
     return (
       <div className="info">
         <img src={ContentImage} alt="email" />
@@ -18,7 +16,7 @@ const Content = ({ user }) => {
   //   decryptHandler(isDecrypted);
   //   setIsDecrypted((prevState) => !prevState);
   // }
-  
+
   return (
     <div className="contents">
       <div className="header">
